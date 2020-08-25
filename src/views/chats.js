@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, } from 'react-native';
 
 import styles from '../styles/chatsStyle';
-
 import UserChatsList from './userChatsList';
-import { FlatList } from 'react-native-gesture-handler';
 
 
 const Chats = ({ navigation }) => {
+
 
     const data = [
         { id: 0, name: 'Ahmet', message: 'Merhaba' },
