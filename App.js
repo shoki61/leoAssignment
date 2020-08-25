@@ -33,34 +33,40 @@ const App = () => {
   return (
     <>
       <StatusBar backgroundColor='#1ec897' />
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color }) => {
-              let iconName;
+      {
+        <Login />
+      }
+      {
+        false &&
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color }) => {
+                let iconName;
 
-              if (route.name === 'ChatNavigation') {
-                iconName = focused ? 'chat-processing' : 'chat-processing';
-              } else if (route.name === 'Users') {
-                iconName = focused ? 'account-circle' : 'account-circle';
-              }
+                if (route.name === 'ChatNavigation') {
+                  iconName = focused ? 'chat-processing' : 'chat-processing';
+                } else if (route.name === 'Users') {
+                  iconName = focused ? 'account-circle' : 'account-circle';
+                }
 
-              return <IconsM name={iconName} size={27} color={color} />;
-            },
-          })}
-          tabBarOptions={{
-            activeTintColor: '#1ec897',
-            inactiveTintColor: 'grey',
-            labelStyle: {
-              fontSize: 13,
-              paddingBottom: 3
-            },
-          }}
-        >
-          <Tab.Screen name="ChatNavigation" component={ChatNavigation} />
-          <Tab.Screen name="Users" component={Users} />
-        </Tab.Navigator>
-      </NavigationContainer>
+                return <IconsM name={iconName} size={27} color={color} />;
+              },
+            })}
+            tabBarOptions={{
+              activeTintColor: '#1ec897',
+              inactiveTintColor: 'grey',
+              labelStyle: {
+                fontSize: 13,
+                paddingBottom: 3
+              },
+            }}
+          >
+            <Tab.Screen name="ChatNavigation" component={ChatNavigation} />
+            <Tab.Screen name="Users" component={Users} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      }
     </>
   )
 };
