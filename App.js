@@ -34,10 +34,7 @@ const App = () => {
     <>
       <StatusBar backgroundColor='#1ec897' />
       {
-        <Login />
-      }
-      {
-        false &&
+        true &&
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -62,8 +59,19 @@ const App = () => {
               },
             }}
           >
-            <Tab.Screen name="ChatNavigation" component={ChatNavigation} />
-            <Tab.Screen name="Users" component={Users} />
+            <Tab.Screen
+              options={{
+                title: 'Chats'
+              }}
+              name="ChatNavigation"
+              component={ChatNavigation} />
+
+            <Tab.Screen
+              options={{
+                title: 'Contacts'
+              }}
+              name="Users"
+              component={Users} />
           </Tab.Navigator>
         </NavigationContainer>
       }
