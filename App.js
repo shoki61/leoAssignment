@@ -4,11 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import IconsM from 'react-native-vector-icons/MaterialCommunityIcons';
+import { observer } from 'mobx-react';
 
 import Login from './src/views/login';
 import Chats from './src/views/chats';
 import Chat from './src/views/chat';
 import Users from './src/views/users';
+import helper from './src/controllers/helper';
 
 
 const Stack = createStackNavigator();
@@ -17,13 +19,18 @@ const Tab = createBottomTabNavigator();
 
 const ChatNavigation = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
       <Stack.Screen
-        options={{
-          headerShown: false
-        }}
-        name="Chats" component={Chats} />
-      <Stack.Screen name="Chat" component={Chat} />
+        name="Chats"
+        component={Chats} />
+
+      <Stack.Screen
+        name="Chat"
+        component={Chat} />
     </Stack.Navigator>
   )
 }
@@ -61,7 +68,8 @@ const App = () => {
           >
             <Tab.Screen
               options={{
-                title: 'Chats'
+                title: 'Chats',
+                tabBarVisible: helper.showTabNavigator
               }}
               name="ChatNavigation"
               component={ChatNavigation} />
@@ -79,4 +87,4 @@ const App = () => {
   )
 };
 
-export default App;
+export default observer(App);
