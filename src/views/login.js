@@ -24,8 +24,12 @@ const Login = () => {
 
                 let temp = []
                 for (let key in responseData) {
+                    if (username === responseData[key].name) {
+                        helper.set('userID', responseData[key].id)
+                    }
                     temp.push(
-                        responseData[key].name
+                        responseData[key].name,
+                        responseData[key].id,
                     )
                 }
 
