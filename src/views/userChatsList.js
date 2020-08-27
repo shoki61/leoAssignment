@@ -16,7 +16,8 @@ const UserChatsList = (props) => {
                 <Text style={styles.userAvatarText}>ZA</Text>
             </View>
             <View style={styles.messagesContainer}>
-                <Text numberOfLines={1} style={styles.userName}>{chatsList.item.name}</Text>
+                <Text numberOfLines={1} style={styles.userName}>{chatsList.item.kimle}</Text>
+                <Text>{JSON.stringify(chatsList.item)}</Text>
                 <Text numberOfLines={1} style={styles.userLastMessage}>{chatsList.item.message}</Text>
             </View>
         </TouchableOpacity>

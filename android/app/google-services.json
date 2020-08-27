@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "62974264043",
+    "firebase_url": "https://leo-assignment.firebaseio.com",
+    "project_id": "leo-assignment",
+    "storage_bucket": "leo-assignment.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62974264043:android:0c1a1e09c25002c893f4ae",
+        "android_client_info": {
+          "package_name": "com.leoassignment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62974264043-d39123kjeq83eihjqkk3qvh20akbktqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtNBs0EtyaEjJih9bM5t9CjJ4Jj8i_VcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62974264043-d39123kjeq83eihjqkk3qvh20akbktqe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

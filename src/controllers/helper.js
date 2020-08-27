@@ -8,6 +8,8 @@ class helper {
 
     userID = ''
 
+    userChatHistory = []
+
     set = (i, v) => (this[i] = v)
 
 
@@ -19,6 +21,7 @@ decorate(
         showTabNavigator: observable,
         username: observable,
         userID: observable,
+        userChatHistory: observable,
 
         set: action
     }

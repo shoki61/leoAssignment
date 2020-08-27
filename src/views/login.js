@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
+import database from '@react-native-firebase/database';
 
 import styles from '../styles/loginStyle';
 import helper from '../controllers/helper';
@@ -15,43 +16,9 @@ const Login = () => {
     const handlerLogin = () => {
         if (username.length >= 2) {
             helper.set('username', username);
-
-            fetch('https://leo-assignment.firebaseio.com/users.json', {
-                headers: { 'Content-Type': 'application/json' }
-            }).then(response => {
-                return response.json();
-            }).then(responseData => {
-
-                let temp = []
-                for (let key in responseData) {
-                    if (username === responseData[key].name) {
-                        helper.set('userID', responseData[key].id)
-                    }
-                    temp.push(
-                        responseData[key].name,
-                        responseData[key].id,
-                    )
-                }
-
-                const createID = 'abcdefghijklmnopqrstuvwxyz1234567890'
-                let id = ''
-                for (let i = 0; i <= 20; i++) {
-                    id += createID[parseInt(Math.random() * (createID.length))]
-                }
-
-                if (temp.indexOf(username) === -1) {
-
-                    fetch('https://leo-assignment.firebaseio.com/users.json', {
-
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            name: username,
-                            id: id
-                        })
-                    })
-                    helper.set('userID', id)
-                }
+            const ref = database().ref(`user/${username}`)
+            ref.set({
+                name: username
             })
         } else {
             setShowError(true)
