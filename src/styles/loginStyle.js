@@ -37,9 +37,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#565656'
     },
+    errorMessage: {
+        color: '#e34949',
+        width: '65%',
+        textAlign: 'center',
+        marginTop: 5
+    },
     button: {
         height: 50,
-        width: '60%',
+        width: '50%',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#1ec897',

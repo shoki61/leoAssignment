@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: '100%',
         justifyContent: 'center',
-        borderBottomColor: '#bababa',
+        borderBottomColor: '#e1e1e1',
         borderBottomWidth: 1,
     },
     userName: {

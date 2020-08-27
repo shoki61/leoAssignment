@@ -4,12 +4,23 @@ class helper {
 
     showTabNavigator = true
 
+    username = ''
+
+    userID = ''
+
+    set = (i, v) => (this[i] = v)
+
+
 };
 
 decorate(
     helper,
     {
-        showTabNavigator: observable
+        showTabNavigator: observable,
+        username: observable,
+        userID: observable,
+
+        set: action
     }
 );
 

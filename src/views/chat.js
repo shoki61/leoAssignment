@@ -11,6 +11,22 @@ import helper from '../controllers/helper';
 const Chat = ({ navigation }) => {
 
 
+
+    const test = () => {
+        fetch('https://leo-assignment.firebaseio.com/data.json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(messages)
+        }).then(() => {
+            alert('ok')
+        }).catch(() => {
+            alert('no')
+        })
+    }
+
+
     const messages = [
         { id: 0, time: '18:40', message: 'Sokak köpeklerini besladim', sender: 'user' },
         { id: 3, time: '18:41', message: 'Merhaba Emirhan', sender: 'admin' },
@@ -73,7 +89,7 @@ const Chat = ({ navigation }) => {
                     <IconI name='image' size={40} color={'#999'} />
                 </TouchableOpacity>
                 <TextInput style={styles.input} multiline placeholder={'Mesaj yaz...'} />
-                <TouchableOpacity style={styles.sendButton}>
+                <TouchableOpacity style={styles.sendButton} onPress={() => test()}>
                     <IconM name='send' size={20} color={'#fff'} />
                 </TouchableOpacity>
             </View>
