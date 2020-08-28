@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import database from '@react-native-firebase/database';
+import { observer } from 'mobx-react';
 
 import styles from '../styles/chatStyle';
 import helper from '../controllers/helper';
@@ -10,40 +11,49 @@ import helper from '../controllers/helper';
 
 const Chat = ({ navigation }) => {
 
+    const [userMessage, setUserMessage] = useState('')
 
-
-    const test = () => {
-        fetch('https://leo-assignment.firebaseio.com/data.json', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(messages)
-        }).then(() => {
-            alert('ok')
-        }).catch(() => {
-            alert('no')
-        })
-    }
-
-
-    const messages = [
-        { id: 0, time: '18:40', message: 'Sokak köpeklerini besladim', sender: 'user' },
-        { id: 3, time: '18:41', message: 'Merhaba Emirhan', sender: 'admin' },
-        { id: 4, time: '18:41', message: 'Yaptığın iyilik onaylanmıştır ve hesapına 10 İP tanımlanmıştır. Sevgi paylaştıkça güzel!', sender: 'admin' },
-        { id: 5, time: '18:56', message: 'Teşekkürler', sender: 'user' }
-    ]
-
+    const [time, setTime] = useState('')
+    const [date, setDate] = useState('')
+    const [inputHeight, setInputHeight] = useState('')
 
     useEffect(() => {
-        helper.showTabNavigator = false;
-        return function () {
-            helper.showTabNavigator = true
+        helper.set('showTabNavigator', false);
+        database()
+            .ref()
+            .on('value', () => {
+                fetch(`https://leo-assignment.firebaseio.com/chatContent/${helper.username}>${helper.userChatWith}.json`, {
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(response => {
+                    return response.json();
+                }).then(responseData => {
+                    if (responseData !== null) {
+                        const temp = []
+                        for (let key in responseData) {
+                            temp.push(
+                                responseData[key]
+                            )
+                        }
+                        helper.set('existingMesseges', temp)
+                    }
+                })
+            })
+        return () => {
+            helper.set('showTabNavigator', true)
+            helper.set('existingMesseges', '')
         }
-    })
+
+    }, [])
+
+    useEffect(() => {
+        let today = new Date()
+        setTime(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds())
+        setDate(today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear())
+    }, [helper.existingMesseges])
 
 
     const Header = () => {
+        const userAvatarName = helper.userChatWith[0].toUpperCase() + helper.userChatWith[1].toUpperCase()
         return (
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.navigate('Chats')} style={styles.backButton}>
@@ -51,11 +61,11 @@ const Chat = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <View style={styles.userAvatar}>
-                    <Text style={styles.userAvatarText}>ZA</Text>
+                    <Text style={styles.userAvatarText}>{userAvatarName}</Text>
                 </View>
 
                 <View style={styles.userNameView}>
-                    <Text style={styles.userName}>Zafer Ayan</Text>
+                    <Text style={styles.userName}>{helper.userChatWith}</Text>
                 </View>
             </View>
         )
@@ -82,34 +92,64 @@ const Chat = ({ navigation }) => {
         )
     }
 
-    const MessageInput = () => {
-        return (
-            <View style={styles.inputContainer}>
-                <TouchableOpacity style={styles.imageButton}>
-                    <IconI name='image' size={40} color={'#999'} />
-                </TouchableOpacity>
-                <TextInput style={styles.input} multiline placeholder={'Mesaj yaz...'} />
-                <TouchableOpacity style={styles.sendButton} onPress={() => test()}>
-                    <IconM name='send' size={20} color={'#fff'} />
-                </TouchableOpacity>
-            </View>
-        )
+    const sendMessageFunction = () => {
+        setUserMessage('')
+        const refChatContentUser = database().ref(`chatContent/${helper.username}>${helper.userChatWith}/${time + ' ' + date}`);
+        refChatContentUser.set({
+            message: userMessage,
+            who: helper.username
+        })
+
+        const refUserWith = database().ref(`chatContent/${helper.userChatWith}>${helper.username}/${time + ' ' + date}`);
+        refUserWith.set({
+            message: userMessage,
+            who: helper.username
+        })
+
+        const refChatsUser = database().ref(`chats/${helper.username}/${helper.userChatWith}`);
+        refChatsUser.set({
+            name: helper.userChatWith
+        })
+
+        const refChatsUserWith = database().ref(`chats/${helper.userChatWith}/${helper.username}`);
+        refChatsUserWith.set({
+            name: helper.username
+        })
     }
+
+
 
 
     return (
         <View style={styles.container} >
             <Header />
-
             <FlatList
                 contentContainerStyle={{ paddingTop: 25 }}
-                data={messages}
-                renderItem={data => data.item.sender === 'user' ? incomingMessage(data.item) : sendMessage(data.item)}
+                data={helper.existingMesseges}
+                renderItem={messageItem => messageItem.item.who === helper.username ? sendMessage(messageItem.item) : incomingMessage(messageItem.item)}
             />
 
-            <MessageInput />
+            <View style={styles.inputContainer}>
+                <TouchableOpacity style={styles.imageButton}>
+                    <IconI name='image' size={40} color={'#999'} />
+                </TouchableOpacity>
+                <TextInput
+                    value={userMessage}
+                    onChangeText={text => setUserMessage(text)}
+                    style={[styles.input, inputHeight > 50 && { borderRadius: 15 }]}
+                    multiline
+                    onContentSizeChange={(event) => {
+                        setInputHeight(Math.floor((event.nativeEvent.contentSize.height)))
+                    }}
+                    placeholder={'Mesaj yaz...'} />
+                <TouchableOpacity
+                    onPress={sendMessageFunction}
+                    style={styles.sendButton}>
+                    <IconM name='send' size={20} color={'#fff'} />
+                </TouchableOpacity>
+            </View>
         </View>
     )
 };
 
-export default Chat;
+export default observer(Chat);

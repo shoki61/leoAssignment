@@ -32,9 +32,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
     userName: {
-        fontSize: 20,
+        fontSize: 22,
         marginBottom: 2,
-        width: '80%'
+        width: '80%',
+        color: '#565656'
     },
     userLastMessage: {
         fontSize: 14,

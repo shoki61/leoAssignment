@@ -1,6 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-const w = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
@@ -8,7 +7,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     chatItemContainer: {
-        width: w,
+        width: '100%',
         height: 50,
         flexDirection: 'row',
         alignItems: 'center',
@@ -32,7 +31,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: '100%',
         justifyContent: 'center',
-        borderBottomColor: '#bababa',
+        borderBottomColor: '#e1e1e1',
         borderBottomWidth: 1,
     },
     userName: {

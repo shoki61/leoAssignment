@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, } from 'react-native';
+import database from '@react-native-firebase/database';
 import { observer } from 'mobx-react';
 
 import styles from '../styles/chatsStyle';
@@ -10,27 +11,24 @@ import helper from '../controllers/helper';
 const Chats = ({ navigation }) => {
 
 
-
-
-
     useEffect(() => {
-        setTimeout(() => {
-            fetch(`https://leo-assignment.firebaseio.com/chats/${helper.username}.json`, {
-                headers: { 'Content-Type': 'application/json' }
-            }).then(response => {
-                return response.json();
-            }).then(responseData => {
-                if (responseData !== null) {
+        database()
+            .ref(`chats/${helper.username}`)
+            .on('value', response => {
+                fetch(`https://leo-assignment.firebaseio.com/chats/${helper.username}.json`, {
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(response => {
+                    return response.json();
+                }).then(responseData => {
                     const temp = []
-                    for (let key in responseData) {
-                        temp.push(
-                            responseData[key]
-                        )
+                    for (let i in responseData) {
+                        temp.push({
+                            name: responseData[i].name
+                        })
                     }
-                    helper.set('userChatHistory', temp)
-                }
+                    helper.userChatHistory = temp
+                })
             })
-        }, 500)
     }, [])
 
 

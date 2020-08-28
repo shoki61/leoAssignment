@@ -34,6 +34,19 @@ const ChatNavigation = () => {
     </Stack.Navigator>
   )
 }
+const ChatWith = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name="Users"
+        component={Users} />
+    </Stack.Navigator>
+  )
+}
 
 const App = () => {
   return (
@@ -79,7 +92,7 @@ const App = () => {
                   title: 'Contacts'
                 }}
                 name="Users"
-                component={Users} />
+                component={ChatWith} />
             </Tab.Navigator>
           </NavigationContainer> :
           <Login />
