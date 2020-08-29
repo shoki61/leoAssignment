@@ -95,6 +95,14 @@ const styles = StyleSheet.create({
     imageButton: {
         marginRight: 15
     },
+    messageContainer: {
+        backgroundColor: '#1ec897',
+        maxWidth: '65%',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 15
+    },
+
 
 
 });

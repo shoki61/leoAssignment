@@ -3,7 +3,7 @@ import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import IconsM from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconsI from 'react-native-vector-icons/Ionicons';
 import { observer } from 'mobx-react';
 
 import Login from './src/views/login';
@@ -62,12 +62,12 @@ const App = () => {
                   let iconName;
 
                   if (route.name === 'ChatNavigation') {
-                    iconName = focused ? 'chat-processing' : 'chat-processing';
+                    iconName = focused ? 'chatbubble-ellipses-sharp' : 'chatbubble-ellipses-sharp';
                   } else if (route.name === 'Users') {
-                    iconName = focused ? 'account-circle' : 'account-circle';
+                    iconName = focused ? 'person-circle-sharp' : 'person-circle-sharp';
                   }
 
-                  return <IconsM name={iconName} size={27} color={color} />;
+                  return <IconsI name={iconName} size={27} color={color} />;
                 },
               })}
               tabBarOptions={{

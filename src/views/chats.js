@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, } from 'react-native';
 import database from '@react-native-firebase/database';
 import { observer } from 'mobx-react';
+import IconI from 'react-native-vector-icons/Ionicons';
 
 import styles from '../styles/chatsStyle';
 import UserChatsList from './userChatsList';
@@ -44,6 +45,17 @@ const Chats = ({ navigation }) => {
                     }
                 />
             }
+            {
+                helper.userChatHistory.length <= 0 &&
+                <View style={{ alignItems: 'center' }}>
+                    <Text style={styles.startChatText}>Hemen sohbete başlamak için tıkla</Text>
+                    <TouchableOpacity style={styles.goUsersButton} onPress={() => navigation.navigate('Users')}>
+                        <Text style={{ color: '#fff', fontSize: 17, marginRight: 5 }}>Contacts</Text>
+                        <IconI name='arrow-forward' size={20} color='#fff' />
+                    </TouchableOpacity>
+                </View>
+            }
+
         </View>
     )
 };
