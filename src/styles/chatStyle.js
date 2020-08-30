@@ -62,13 +62,13 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: w,
         minHeight: 60,
-        backgroundColor: '#fff',
+        backgroundColor: '#fafafa',
         borderTopWidth: 1,
         borderTopColor: '#ececec',
         alignItems: 'flex-end',
         justifyContent: 'center',
         flexDirection: 'row',
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         paddingVertical: 10
     },
     input: {
@@ -90,10 +90,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 100,
         backgroundColor: '#1ec897',
-        marginLeft: 15
+        marginLeft: 10
     },
-    imageButton: {
-        marginRight: 15
+    inputContainerLeftIcon: {
+        marginRight: 8
     },
     messageContainer: {
         backgroundColor: '#1ec897',

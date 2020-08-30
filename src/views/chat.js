@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Platform } from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconF from 'react-native-vector-icons/FontAwesome5';
+import IconFeather from 'react-native-vector-icons/Feather'
 import database from '@react-native-firebase/database';
 import { observer } from 'mobx-react';
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import * as Progress from 'react-native-progress';
 import SImage from 'react-native-scalable-image';
+import MapView, { Marker } from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 
 import styles from '../styles/chatStyle';
 import helper from '../controllers/helper';
@@ -15,14 +19,18 @@ import helper from '../controllers/helper';
 
 const Chat = ({ navigation }) => {
 
+
+    const replyListRef = useRef(null);
+
     const [userMessage, setUserMessage] = useState('')
     const [image, setImage] = useState(null)
 
     const [time, setTime] = useState('')
     const [date, setDate] = useState('')
     const [inputHeight, setInputHeight] = useState('')
-    const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
 
     useEffect(() => {
         helper.set('showTabNavigator', false);
@@ -54,9 +62,14 @@ const Chat = ({ navigation }) => {
 
     useEffect(() => {
         let today = new Date()
-        setTime(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds())
-        setDate(today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear())
+        setTime(('0' + today.getHours()).slice(-2) + ":" + ('0' + today.getMinutes()).slice(-2) + ":" + ('0' + today.getSeconds()).slice(-2))
+        setDate(('0' + today.getDate()).slice(-2) + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getFullYear()).slice(-2))
     }, [helper.existingMesseges])
+
+
+    const messageInputHandler = (enteredText) => {
+        setUserMessage(enteredText);
+    }
 
 
     const Header = () => {
@@ -78,15 +91,55 @@ const Chat = ({ navigation }) => {
         )
     }
 
+    const goMapPage = (location) => {
+        helper.set('longitude', location.longitude)
+        helper.set('latitude', location.latitude)
+        navigation.navigate('MapPage')
+    }
 
     const incomingMessage = (item) => {
         return (
             <View style={styles.incomingMessageView}>
                 <View style={[item.message && { backgroundColor: '#f5f5f5', maxWidth: '65%', paddingHorizontal: 15, paddingVertical: 10, borderRadius: 15 }]}>
                     {
-                        item.message ?
-                            <Text style={[styles.message, { color: '#434343' }]}>{item.message}</Text> :
-                            <SImage source={{ uri: item.imageURL }} width={200} borderRadius={10} />
+                        item.message &&
+                        <Text style={[styles.message, { color: '#434343' }]}>{item.message}</Text>
+                    }
+                    {
+                        item.imageURL &&
+                        <SImage source={{ uri: item.imageURL }} width={200} borderRadius={10} />
+                    }
+                    {
+                        item.location &&
+                        <TouchableOpacity
+                            onPress={() => goMapPage(item.location)}
+                            style={{ borderWidth: 3, borderColor: '#00c3ff', overflow: 'hidden', borderRadius: 10, width: 250, height: 140 }}>
+                            <MapView
+                                toolbarEnabled={false}
+                                scrollEnabled={false}
+                                initialRegion={{
+                                    latitude: item.location.latitude,
+                                    longitude: item.location.longitude,
+                                    latitudeDelta: 0.001,
+                                    longitudeDelta: 0.001
+                                }}
+                                style={{
+                                    flex: 1,
+                                    alignSelf: 'stretch',
+                                    width: null
+                                }}
+                            >
+                                <Marker
+                                    coordinate={{
+                                        latitude: item.location.latitude,
+                                        longitude: item.location.longitude
+                                    }}
+                                >
+                                    <IconI name='pin-sharp' size={35} color={'#ff4242'} />
+                                </Marker>
+
+                            </MapView>
+                        </TouchableOpacity>
                     }
                 </View>
             </View>
@@ -98,38 +151,107 @@ const Chat = ({ navigation }) => {
             <View style={styles.sendMessageView}>
                 <View style={[item.message && styles.messageContainer]}>
                     {
-                        item.message ?
-                            <Text style={[styles.message, { color: '#fff' }]}>{item.message}</Text> :
-                            <SImage source={{ uri: item.imageURL }} width={200} borderRadius={10} />
+                        item.message &&
+                        <Text style={[styles.message, { color: '#fff' }]}>{item.message}</Text>
+                    }
+                    {
+                        item.imageURL &&
+                        <SImage source={{ uri: item.imageURL }} width={200} borderRadius={10} />
+                    }
+                    {
+                        item.location &&
+                        <TouchableOpacity
+                            onPress={() => goMapPage(item.location)}
+                            style={{ borderWidth: 3, borderColor: '#00c3ff', overflow: 'hidden', borderRadius: 10, width: 250, height: 140 }}>
+                            <MapView
+                                toolbarEnabled={false}
+                                scrollEnabled={false}
+                                initialRegion={{
+                                    latitude: item.location.latitude,
+                                    longitude: item.location.longitude,
+                                    latitudeDelta: 0.001,
+                                    longitudeDelta: 0.001
+                                }}
+                                style={{
+                                    flex: 1,
+                                    alignSelf: 'stretch',
+                                    width: null
+                                }}
+                            >
+                                <Marker
+                                    coordinate={{
+                                        latitude: item.location.latitude,
+                                        longitude: item.location.longitude
+                                    }}
+                                >
+                                    <IconI name='pin-sharp' size={35} color={'#ff4242'} />
+                                </Marker>
+
+                            </MapView>
+                        </TouchableOpacity>
                     }
                 </View>
             </View>
         )
     }
 
-    const sendMessageFunction = () => {
-        setUserMessage('')
-        const refChatContentUser = database().ref(`chatContent/${helper.username}>${helper.userChatWith}/${time + ' ' + date}`);
-        refChatContentUser.set({
-            message: userMessage,
-            who: helper.username
-        })
+    const sendMessageFunction = (value, url) => {
 
-        const refUserWith = database().ref(`chatContent/${helper.userChatWith}>${helper.username}/${time + ' ' + date}`);
-        refUserWith.set({
-            message: userMessage,
-            who: helper.username
-        })
+        if (value === 'image') {
+            const refChatContentUser = database().ref(`chatContent/${helper.username}>${helper.userChatWith}/${time + ' ' + date}`);
+            refChatContentUser.set({
+                imageURL: url._W,
+                who: helper.username
+            })
+            const refUserWith = database().ref(`chatContent/${helper.userChatWith}>${helper.username}/${time + ' ' + date}`);
+            refUserWith.set({
+                imageURL: url._W,
+                who: helper.username
+            })
+        }
+        else if (value === 'location') {
+            const refChatContentUser = database().ref(`chatContent/${helper.username}>${helper.userChatWith}/${time + ' ' + date}`);
+            refChatContentUser.set({
+                location: {
+                    latitude: latitude,
+                    longitude: longitude
+                },
+                who: helper.username
+            })
 
-        const refChatsUser = database().ref(`chats/${helper.username}/${helper.userChatWith}`);
-        refChatsUser.set({
-            name: helper.userChatWith
-        })
+            const refUserWith = database().ref(`chatContent/${helper.userChatWith}>${helper.username}/${time + ' ' + date}`);
+            refUserWith.set({
+                location: {
+                    latitude: latitude,
+                    longitude: longitude
+                },
+                who: helper.username
+            })
+        } else {
+            setUserMessage('')
+            const refChatContentUser = database().ref(`chatContent/${helper.username}>${helper.userChatWith}/${time + ' ' + date}`);
+            refChatContentUser.set({
+                message: userMessage,
+                who: helper.username
+            })
 
-        const refChatsUserWith = database().ref(`chats/${helper.userChatWith}/${helper.username}`);
-        refChatsUserWith.set({
-            name: helper.username
-        })
+            const refUserWith = database().ref(`chatContent/${helper.userChatWith}>${helper.username}/${time + ' ' + date}`);
+            refUserWith.set({
+                message: userMessage,
+                who: helper.username
+            })
+
+            const refChatsUser = database().ref(`chats/${helper.username}/${helper.userChatWith}`);
+            refChatsUser.set({
+                name: helper.userChatWith
+            })
+
+            const refChatsUserWith = database().ref(`chats/${helper.userChatWith}/${helper.username}`);
+            refChatsUserWith.set({
+                name: helper.username
+            })
+        }
+
     }
 
     const getImage = async () => {
@@ -164,7 +286,6 @@ const Chat = ({ navigation }) => {
         const { uri } = image;
         const filename = uri.substring(uri.lastIndexOf('/') + 1);
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-        setUploading(true);
         setTransferred(0);
 
         const task = storage()
@@ -176,7 +297,6 @@ const Chat = ({ navigation }) => {
             .putFile(uploadUri);
 
 
-        // set progress state
         task.on('state_changed', snapshot => {
             setTransferred(
                 Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
@@ -189,29 +309,40 @@ const Chat = ({ navigation }) => {
             console.error(e);
         }
 
-        setUploading(false);
 
         setImage(null);
 
         const url = storage().ref(`${helper.username}${helper.userChatWith}${filename}`).getDownloadURL()
         setTimeout(() => {
-            const refChatContentUser = database().ref(`chatContent/${helper.username}>${helper.userChatWith}/${time + ' ' + date}`);
-            refChatContentUser.set({
-                imageURL: url._W,
-                who: helper.username
-            })
-            const refUserWith = database().ref(`chatContent/${helper.userChatWith}>${helper.username}/${time + ' ' + date}`);
-            refUserWith.set({
-                imageURL: url._W,
-                who: helper.username
-            })
-        }, 500)
+            sendMessageFunction('image', url)
+        }, 1000)
 
-
+        setTransferred(0)
 
 
     };
 
+
+    const sendLocation = async () => {
+        await Geolocation.getCurrentPosition(
+            async (info) => {
+                await setLatitude(info.coords.latitude);
+                await setLongitude(info.coords.longitude);
+            },
+            (error) => console.log(error),
+            {
+                enableHighAccuracy: true,
+            },
+        );
+        if (latitude > 0 || longitude > 0) {
+            setTimeout(() => {
+                sendMessageFunction('location')
+            }, 0)
+        } else {
+            alert('Lütfen konum servislerinizin açık olduğundan emin olun!')
+        }
+
+    }
 
 
 
@@ -219,18 +350,38 @@ const Chat = ({ navigation }) => {
     return (
         <View style={styles.container} >
             <Header />
+
             <FlatList
+                ref={replyListRef}
+                onContentSizeChange={() => {
+                    replyListRef.current.scrollToEnd();
+                }}
                 contentContainerStyle={{ paddingTop: 15, paddingBottom: 5 }}
                 data={helper.existingMesseges}
                 renderItem={messageItem => messageItem.item.who === helper.username ? sendMessage(messageItem.item) : incomingMessage(messageItem.item)}
             />
 
             <View style={[styles.inputContainer, image !== null && { justifyContent: 'space-between' }]}>
-                <TouchableOpacity
-                    onPress={getImage}
-                    style={styles.imageButton}>
-                    <IconI name='image' size={40} color={'#999'} />
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity
+                        onPress={getImage}
+                        style={styles.inputContainerLeftIcon}>
+                        <IconI name='image' size={35} color={'#ff8d12'} />
+                    </TouchableOpacity>
+                    {
+                        image === null ?
+                            <TouchableOpacity
+                                onPress={sendLocation}
+                                style={styles.inputContainerLeftIcon}>
+                                <IconF name='map-marker-alt' size={27} color={'#ff7373'} />
+                            </TouchableOpacity> :
+                            <TouchableOpacity
+                                onPress={() => setImage(null)}>
+                                <IconFeather name='x' size={27} color={'#4099ff'} />
+                            </TouchableOpacity>
+                    }
+
+                </View>
 
                 {
                     image !== null ?
@@ -248,9 +399,12 @@ const Chat = ({ navigation }) => {
                         :
                         <TextInput
                             value={userMessage}
-                            onChangeText={text => setUserMessage(text)}
+                            onChangeText={messageInputHandler}
                             style={[styles.input, inputHeight > 50 && { borderRadius: 15 }]}
                             multiline
+                            onFocus={() => {
+                                setTimeout(() => replyListRef.current.scrollToEnd(), 300)
+                            }}
                             onContentSizeChange={(event) => {
                                 setInputHeight(Math.floor((event.nativeEvent.contentSize.height)))
                             }}

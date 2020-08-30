@@ -18,6 +18,12 @@ class helper {
 
     users = []
 
+    latitude = ''
+
+    longitude = ''
+
+    statusBarHidden = false
+
     set = (i, v) => (this[i] = v)
 
 
@@ -33,6 +39,9 @@ decorate(
         userChatWith: observable,
         existingMesseges: observable,
         users: observable,
+        latitude: observable,
+        latitude: observable,
+        statusBarHidden: observable,
 
         set: action
     }

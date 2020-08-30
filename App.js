@@ -11,6 +11,7 @@ import Chats from './src/views/chats';
 import Chat from './src/views/chat';
 import Users from './src/views/users';
 import helper from './src/controllers/helper';
+import MapPage from './src/views/mapPage';
 
 
 const Stack = createStackNavigator();
@@ -25,12 +26,15 @@ const ChatNavigation = () => {
       }}
     >
       <Stack.Screen
-        name="Chats"
+        name='Chats'
         component={Chats} />
 
       <Stack.Screen
-        name="Chat"
+        name='Chat'
         component={Chat} />
+      <Stack.Screen
+        name='MapPage'
+        component={MapPage} />
     </Stack.Navigator>
   )
 }
@@ -42,7 +46,7 @@ const ChatWith = () => {
       }}
     >
       <Stack.Screen
-        name="Users"
+        name='Users'
         component={Users} />
     </Stack.Navigator>
   )
@@ -51,7 +55,7 @@ const ChatWith = () => {
 const App = () => {
   return (
     <>
-      <StatusBar backgroundColor='#1ec897' />
+      <StatusBar hidden={helper.statusBarHidden} backgroundColor='#1ec897' />
 
       {
         helper.username !== '' ?
@@ -84,14 +88,14 @@ const App = () => {
                   title: 'Chats',
                   tabBarVisible: helper.showTabNavigator
                 }}
-                name="ChatNavigation"
+                name='ChatNavigation'
                 component={ChatNavigation} />
 
               <Tab.Screen
                 options={{
                   title: 'Contacts'
                 }}
-                name="Users"
+                name='Users'
                 component={ChatWith} />
             </Tab.Navigator>
           </NavigationContainer> :
