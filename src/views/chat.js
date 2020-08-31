@@ -251,29 +251,31 @@ const Chat = ({ navigation }) => {
                 lastMessage: 'konum gönderildi'
             })
         } else { // gönderilen veri konum veya resim değilse çalışır  
-            const refChatContentUser = database().ref(`chatContent/${helper.username}>${helper.userChatWith}/${time + ' ' + date}`);
-            refChatContentUser.set({
-                message: userMessage,
-                who: helper.username
-            })
+            if (userMessage !== '') {
+                const refChatContentUser = database().ref(`chatContent/${helper.username}>${helper.userChatWith}/${time + ' ' + date}`);
+                refChatContentUser.set({
+                    message: userMessage,
+                    who: helper.username
+                })
 
-            const refUserWith = database().ref(`chatContent/${helper.userChatWith}>${helper.username}/${time + ' ' + date}`);
-            refUserWith.set({
-                message: userMessage,
-                who: helper.username
-            })
+                const refUserWith = database().ref(`chatContent/${helper.userChatWith}>${helper.username}/${time + ' ' + date}`);
+                refUserWith.set({
+                    message: userMessage,
+                    who: helper.username
+                })
 
-            const refChatsUser = database().ref(`chats/${helper.username}/${helper.userChatWith}`);
-            refChatsUser.set({
-                name: helper.userChatWith,
-                lastMessage: userMessage
-            })
+                const refChatsUser = database().ref(`chats/${helper.username}/${helper.userChatWith}`);
+                refChatsUser.set({
+                    name: helper.userChatWith,
+                    lastMessage: userMessage
+                })
 
-            const refChatsUserWith = database().ref(`chats/${helper.userChatWith}/${helper.username}`);
-            refChatsUserWith.set({
-                name: helper.username,
-                lastMessage: userMessage
-            })
+                const refChatsUserWith = database().ref(`chats/${helper.userChatWith}/${helper.username}`);
+                refChatsUserWith.set({
+                    name: helper.username,
+                    lastMessage: userMessage
+                })
+            }
             setUserMessage('')  //mesaj gönderildikten sonra inputun içi otomatik boş olması için "userMessage"in değeri boş stringe eşitlendi
         }
 
