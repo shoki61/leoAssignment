@@ -13,17 +13,21 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [showError, setShowError] = useState(false);
 
-    const handlerLogin = () => {
+    const loginHandler = () => {     // kullanıcı adının en az iki karakter olup olmadıgını kontrol eden fonksiyon
         if (username.length >= 2) {
             helper.set('username', username);
-            const ref = database().ref(`user/${username}`)
+            const ref = database().ref(`users/${username}`)   // veritabanına kullanıcı adını kaydeder
             ref.set({
                 name: username
             })
         } else {
-            setShowError(true)
+            setShowError(true)  // kullanıcı adı hatalıysa hata mesajını gösterir
         }
 
+    }
+
+    const setUsernameHandler = (name) => {
+        setUsername(name)
     }
 
     return (
@@ -32,7 +36,7 @@ const Login = () => {
                 <IconM style={styles.inputIcon} name='account' size={30} color='#fff' />
                 <TextInput
                     value={username}
-                    onChangeText={name => setUsername(name)}
+                    onChangeText={setUsernameHandler}
                     placeholder='username...'
                     style={styles.input} />
             </View>
@@ -41,7 +45,7 @@ const Login = () => {
                 <Text style={styles.errorMessage}>Username must be at least two letters</Text>
             }
             <TouchableOpacity
-                onPress={handlerLogin}
+                onPress={loginHandler}
                 style={styles.button}>
                 <Text style={{ color: '#fff', fontSize: 18 }}>Giriş yap</Text>
             </TouchableOpacity>

@@ -55,10 +55,14 @@ const ChatWith = () => {
 const App = () => {
   return (
     <>
-      <StatusBar hidden={helper.statusBarHidden} backgroundColor='#1ec897' />
+      <StatusBar
+        hidden={
+          helper.statusBarHidden  //konum haritada gösterildiğinde "StatusBar" gizlenmesi için
+        }
+        backgroundColor='#1ec897' />
 
       {
-        helper.username !== '' ?
+        helper.username !== '' ?  //kullanıcı giriş yaparsa uygulamada gezinmeye izin verilir yoksa login sayfasında kalır
           <NavigationContainer>
             <Tab.Navigator
               screenOptions={({ route }) => ({
@@ -70,13 +74,12 @@ const App = () => {
                   } else if (route.name === 'Users') {
                     iconName = focused ? 'person-circle-sharp' : 'person-circle-sharp';
                   }
-
                   return <IconsI name={iconName} size={27} color={color} />;
                 },
               })}
               tabBarOptions={{
                 activeTintColor: '#1ec897',
-                inactiveTintColor: 'grey',
+                inactiveTintColor: '#b3b3b3',
                 labelStyle: {
                   fontSize: 13,
                   paddingBottom: 3

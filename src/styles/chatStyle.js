@@ -1,6 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-const w = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
@@ -9,7 +8,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     header: {
-        width: w,
+        width: '100%',
         height: 70,
         backgroundColor: '#1ec897',
         flexDirection: 'row',
@@ -44,13 +43,13 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     incomingMessageView: {
-        width: w,
+        width: '100%',
         alignItems: 'flex-start',
         marginVertical: 7,
         paddingLeft: 15
     },
     sendMessageView: {
-        width: w,
+        width: '100%',
         alignItems: 'flex-end',
         paddingRight: 15,
         marginVertical: 7
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     inputContainer: {
-        width: w,
+        width: '100%',
         minHeight: 60,
         backgroundColor: '#fafafa',
         borderTopWidth: 1,

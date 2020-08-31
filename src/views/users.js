@@ -14,36 +14,35 @@ const Users = ({ navigation }) => {
         database()
             .ref('user')
             .on('value', () => {
-                fetch('https://leo-assignment.firebaseio.com/user.json', {
-                    headers: { 'Content-Type': 'application/json' }
-                }).then(response => {
-                    return response.json();
-                }).then(responseData => {
-                    if (responseData !== null) {
-                        const temp = []
-                        for (let key in responseData) {
-                            temp.push(
-                                responseData[key]
-                            )
+                fetch('https://leo-assignment.firebaseio.com/users.json')// veritabanda mevcut kullanıcıları fetch ile eşzamanlı olarak çeker
+                    .then(response => {
+                        return response.json();
+                    }).then(responseData => {
+                        if (responseData !== null) {
+                            const temp = []
+                            for (let key in responseData) {
+                                temp.push(
+                                    responseData[key]
+                                )
+                            }
+                            helper.set('users', temp)// veritabanından çekilen kullanıcı bilgilerini helper daki users dizisine eşitler
                         }
-                        helper.set('users', temp)
-                    }
-                })
+                    })
             })
     }, [])
 
 
 
-    const usersList = (item) => {
-        const userAvatarName = item.item.name[0].toUpperCase() + item.item.name[1].toUpperCase();
+    const usersList = (item) => { //gelen her bir kullanıcı verisini dönderen fonksiyon
+        const userAvatarName = item.item.name[0].toUpperCase() + item.item.name[1].toUpperCase(); //kullanıcı adının ilk iki harfini alarak ve büyük harfe dönüştürerek "userAvatarName" e eşitler
 
-        const goToChat = () => {
+        const goToChat = () => { //sohbet etmek istediği kullanıcı adını helperde tanımlı "userChatWith" değişkenine eşitleyen ve "Chat" sayfasına yönlendiren fonksiyon
             helper.set('userChatWith', item.item.name)
             navigation.navigate('Chat')
         }
 
         return (
-            item.item.name !== helper.username &&
+            item.item.name !== helper.username && // uygulamaya giriş yapan kullanıcının, kullanıcılar listesinde görünmemesini sağlar.
             <TouchableOpacity
                 onPress={goToChat}
                 activeOpacity={.9}
@@ -61,7 +60,7 @@ const Users = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <FlatList
+            <FlatList                         // bütün kullanıcıları uygulamanın "contacts" bölümünde liste olarak gösterir
                 contentContainerStyle={{ paddingVertical: 15 }}
                 data={helper.users}
                 renderItem={item => usersList(item)}

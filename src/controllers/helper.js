@@ -2,29 +2,27 @@ import { observable, action, decorate } from 'mobx';
 
 class helper {
 
-    message = ''
 
-    showTabNavigator = true
+    showTabNavigator = true //"Tab Navigation"nın gösterilip gösterilmeyeceğini belirleyen değişken
 
-    username = ''
+    username = '' //kullanıcının adını tutan değişken
 
-    userID = ''
 
-    userChatHistory = []
+    userChatHistory = [] //kullanıcın sohbetlerini tutan array
 
-    userChatWith = ''
+    userChatWith = '' //sohbet edilecek olan kişinin adını tutan değişken
 
-    existingMesseges = ''
+    existingMessages = [] //yapılan mesajlaşmaları tutan array
 
-    users = []
+    users = [] //kullanıcıları tutan array
 
-    latitude = ''
+    latitude = '' //enlem değerini tutan değişken
 
-    longitude = ''
+    longitude = '' //boylam değerini tutan değişken
 
-    statusBarHidden = false
+    statusBarHidden = false //"StatusBar"ın gizlenip gizlenmeyeceğini belirleyen değişken
 
-    set = (i, v) => (this[i] = v)
+    set = (i, v) => (this[i] = v)  //helper'de tanımlanmış olan bütün değişkenlerin değerlerini değiştiren fonksiyon
 
 
 };
@@ -37,7 +35,7 @@ decorate(
         userID: observable,
         userChatHistory: observable,
         userChatWith: observable,
-        existingMesseges: observable,
+        existingMessages: observable,
         users: observable,
         latitude: observable,
         latitude: observable,

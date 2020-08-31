@@ -17,12 +17,12 @@ const MapPage = ({ navigation }) => {
     useEffect(() => {
         setLatitude(helper.latitude)
         setLongitude(helper.longitude)
-        helper.set('statusBarHidden', true)
+        helper.set('statusBarHidden', true) // komponent ilk kez run edildiğinde StatusBar'ı kaldırmak için helper'daki "statusBarHidden" değişkenin değeri true'ya eşitlendi
 
         return () => {
             setLatitude(null)
             setLongitude(null)
-            helper.set('statusBarHidden', false)
+            helper.set('statusBarHidden', false) //"MapPage" bileşeninden çıkıldığında StatusBar'ı göstermek için helper'daki "statusBarHidden" değişkenin değeri false'a eşitlendi
         }
     }, [])
 
